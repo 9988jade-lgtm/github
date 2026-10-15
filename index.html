@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="삼현지피알의 대구경 나선형 강관 현장 생산 기술로 도시 지하에 물을 저장하는 Smart Water Bank 지하 물 저장 시스템">
+<title>삼현지피알 지하 물 저장 시스템</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 제안서의 네이비+틸 톤을 그대로 잇는 다크 우선 디자인. 지상(밝은 밴드)과 지하(짙은 밴드)가 번갈아 내려가는 구조. */
+:root{
+  --bg:#081528; --surface:#0f2140; --surface-2:#142a4e; --surface-3:#1a3560;
+  --fg:#e9f1f8; --muted:#9fb4ca; --line:#24395e;
+  --accent:#22d3c5; --accent-2:#7ff2e6; --accent-fg:#06202a; --accent-dim:#117e78;
+  --water:#1f8fb8; --water-deep:#135f82; --soil:#3a3127; --soil-2:#2b241c; --grass:#2f6b45; --steel:#9fb3c4; --steel-dark:#5c7085;
+  --ok:#5fd39a; --warn:#f4b860;
+  --font-display:"Gothic A1","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f3f7fb; --surface:#ffffff; --surface-2:#e6eef6; --surface-3:#d9e5f0;
+    --fg:#0b1b33; --muted:#4d6279; --line:#cbd8e6;
+    --accent:#0e8f86; --accent-2:#13b3a6; --accent-fg:#ffffff; --accent-dim:#b9e9e3;
+    --water:#4fb3d6; --water-deep:#2a8db3; --soil:#cdb89c; --soil-2:#b39d7f; --grass:#6fa567; --steel:#8fa3b5; --steel-dark:#5c7085;
+    --ok:#1f7a4d; --warn:#b7791f;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f3f7fb; --surface:#ffffff; --surface-2:#e6eef6; --surface-3:#d9e5f0;
+  --fg:#0b1b33; --muted:#4d6279; --line:#cbd8e6;
+  --accent:#0e8f86; --accent-2:#13b3a6; --accent-fg:#ffffff; --accent-dim:#b9e9e3;
+  --water:#4fb3d6; --water-deep:#2a8db3; --soil:#cdb89c; --soil-2:#b39d7f; --grass:#6fa567; --steel:#8fa3b5; --steel-dark:#5c7085;
+  --ok:#1f7a4d; --warn:#b7791f;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.75;word-break:keep-all}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--font-display);line-height:1.3;margin:0;text-wrap:balance;font-weight:800}
+h2{font-size:clamp(1.6rem,3.2vw,2.3rem);letter-spacing:-.01em}
+h3{font-size:1.1rem}
+p{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{padding-block:clamp(52px,7vw,96px)}
+.band-alt{background:var(--surface)}
+.eyebrow{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.lede{color:var(--muted);max-width:64ch;margin-top:14px;font-size:1.04rem}
+.section-head{margin-bottom:40px}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px}
+.accent{color:var(--accent)}
+
+/* header */
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.site-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:62px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);font-family:var(--font-display);font-weight:800;font-size:1.02rem}
+.brand small{display:block;font-family:var(--font-mono);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:.08em;line-height:1.2}
+.brand-mark{width:32px;height:32px;border-radius:8px;background:var(--accent);display:grid;place-items:center;color:var(--accent-fg);flex:none}
+.nav{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
+.nav a{text-decoration:none;color:var(--muted);font-size:.88rem;padding:6px 10px;border-radius:6px}
+.nav a:hover{color:var(--fg);background:var(--surface-2)}
+@media (max-width:760px){.nav a:not(.nav-cta){display:none}}
+.nav-cta{color:var(--accent-fg)!important;background:var(--accent)!important;font-weight:700}
+
+/* hero */
+.hero{padding-block:clamp(44px,6vw,80px) 0;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:44px;align-items:center}
+@media (max-width:880px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:900;letter-spacing:-.02em}
+.hero h1 .accent{display:block}
+.hero .lede{font-size:1.08rem}
+.hero-sub{font-family:var(--font-mono);font-size:.8rem;color:var(--muted);margin-top:18px;letter-spacing:.04em}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-ghost{border-color:var(--line);color:var(--fg);background:transparent}
+.btn-ghost:hover{background:var(--surface-2)}
+.diagram{width:100%;max-width:100%;height:auto;display:block}
+.diagram text{font-family:var(--font-mono);font-size:11px;fill:var(--fg)}
+.diagram .lbl-muted{fill:var(--muted)}
+.diagram .leader{stroke:var(--muted);stroke-width:1;fill:none;stroke-dasharray:3 3}
+.diagram .dim{stroke:var(--accent);stroke-width:1;fill:none}
+.diagram .dim-t{fill:var(--accent);font-weight:500}
+.diagram-caption{font-family:var(--font-mono);font-size:.76rem;color:var(--muted);margin-top:10px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:clamp(40px,6vw,64px)}
+@media (max-width:900px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{padding:22px 16px 22px 0;border-right:1px solid var(--line);min-width:0}
+.stat:last-child{border-right:0}
+@media (max-width:900px){.stat:nth-child(3){border-right:0}.stat:nth-child(n+4){border-top:1px solid var(--line)}}
+@media (max-width:560px){.stat:nth-child(3){border-right:1px solid var(--line)}.stat:nth-child(2n){border-right:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+.stat b{display:block;font-family:var(--font-display);font-size:1.75rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.2;letter-spacing:-.01em}
+.stat b small{font-size:.85rem;font-family:var(--font-mono);font-weight:400;color:var(--muted);margin-left:4px}
+.stat span{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+.stat-note{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);margin-top:10px}
+
+/* why */
+.shift{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;padding:28px;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-bottom:28px}
+@media (max-width:640px){.shift{grid-template-columns:1fr;text-align:center}.shift .arrow{transform:rotate(90deg)}}
+.shift .k{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.shift .from{color:var(--muted);font-family:var(--font-display);font-size:1.4rem;font-weight:700}
+.shift .to{color:var(--accent);font-family:var(--font-display);font-size:1.6rem;font-weight:900}
+.shift .arrow{color:var(--accent);display:grid;place-items:center}
+.drivers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:760px){.drivers{grid-template-columns:1fr}}
+.driver{padding:20px 22px;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;min-width:0}
+.driver h3{margin-bottom:6px}
+.driver p{color:var(--muted);font-size:.93rem}
+
+/* tech */
+.tech{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:880px){.tech{grid-template-columns:1fr}}
+.ps{display:grid;gap:14px}
+.ps-item{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+.ps-item .ic{width:38px;height:38px;border-radius:8px;background:var(--surface-2);display:grid;place-items:center;color:var(--accent);flex:none}
+.ps-item h3{font-size:1rem;margin-bottom:4px}
+.ps-item p{color:var(--muted);font-size:.92rem}
+.ps-item .spec{font-family:var(--font-mono);font-size:.78rem;color:var(--accent);display:block;margin-top:6px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.93rem}
+th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);background:var(--surface-2)}
+th.hi{color:var(--accent)}
+tbody tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700;white-space:nowrap}
+td.rc{color:var(--muted)}
+td.hi{color:var(--fg);font-weight:500;background:color-mix(in srgb,var(--accent) 9%,transparent)}
+td.hi small{display:block;font-family:var(--font-mono);font-size:.76rem;color:var(--accent);font-weight:400;margin-top:2px}
+.table-note{font-size:.84rem;color:var(--muted);margin-top:12px}
+
+/* calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:820px){.calc{grid-template-columns:1fr}}
+.calc-form{display:grid;gap:16px}
+.field{display:grid;gap:6px}
+.field label{font-size:.88rem;font-weight:500}
+.field .hint{font-size:.76rem;color:var(--muted);font-family:var(--font-mono)}
+.field input,.field select,.field textarea{font:inherit;font-size:.95rem;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);width:100%;min-width:0}
+.field input[type=number]{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.result{background:var(--accent);color:var(--accent-fg);border-radius:14px;padding:28px}
+.result .big{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1;letter-spacing:-.02em}
+.result .big small{font-family:var(--font-mono);font-size:1rem;font-weight:400;margin-left:6px;opacity:.85}
+.result .cap{font-size:.8rem;opacity:.85;margin-bottom:6px;font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase}
+.result dl{display:grid;grid-template-columns:1fr auto;gap:8px 16px;margin:22px 0 0;padding-top:18px;border-top:1px solid color-mix(in srgb,var(--accent-fg) 25%,transparent);font-size:.92rem}
+.result dt{opacity:.85}
+.result dd{margin:0;font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+.formula{font-family:var(--font-mono);font-size:.76rem;color:var(--muted);margin-top:14px;line-height:1.7}
+
+/* pipeline */
+.pipe-total{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.pipe-total b{font-family:var(--font-display);font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.pipe-total span{color:var(--muted)}
+.projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.projects{grid-template-columns:1fr}}
+.project{padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:12px;min-width:0;display:grid;gap:10px;align-content:start}
+.project .year{font-family:var(--font-mono);font-size:.74rem;color:var(--accent);letter-spacing:.1em}
+.project .amt{font-family:var(--font-display);font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+.project .amt small{font-size:.8rem;font-family:var(--font-mono);font-weight:400;color:var(--muted);margin-left:4px}
+.project p{color:var(--muted);font-size:.92rem}
+
+/* esg */
+.esg-group{margin-bottom:28px}
+.esg-group:last-child{margin-bottom:0}
+.esg-label{font-family:var(--font-mono);font-size:.78rem;color:var(--accent);letter-spacing:.08em;margin-bottom:12px}
+.esg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:640px){.esg{grid-template-columns:1fr}}
+.esg-card{padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:12px;min-width:0;display:grid;grid-template-columns:auto 1fr;gap:16px}
+.esg-card .badge{width:40px;height:40px;border-radius:50%;background:var(--surface-2);color:var(--accent);display:grid;place-items:center;font-family:var(--font-mono);font-size:1.1rem;flex:none}
+.esg-card h3{font-size:1.05rem;margin-bottom:4px}
+.esg-card p{color:var(--muted);font-size:.92rem}
+
+/* roadmap */
+.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:phase}
+@media (max-width:900px){.roadmap{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}
+@media (max-width:520px){.roadmap{grid-template-columns:1fr}}
+.phase{position:relative;padding:0 20px 0 0;min-width:0}
+.phase::before{counter-increment:phase;content:"Phase " counter(phase);font-family:var(--font-mono);color:var(--accent);font-size:.76rem;letter-spacing:.1em;display:block;margin-bottom:8px}
+.phase::after{content:"";position:absolute;top:8px;left:72px;right:16px;height:1px;background:var(--line)}
+.phase:last-child::after{display:none}
+@media (max-width:900px){.phase::after{display:none}}
+.phase .yr{font-family:var(--font-display);font-size:1.4rem;font-weight:900;font-variant-numeric:tabular-nums}
+.phase h3{margin:4px 0 8px;font-size:1rem}
+.phase p{color:var(--muted);font-size:.9rem}
+.phase .fund{font-family:var(--font-mono);font-size:.76rem;color:var(--accent);display:block;margin-top:8px}
+
+/* partnership */
+.jv{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:stretch;margin-bottom:28px}
+@media (max-width:820px){.jv{grid-template-columns:1fr}}
+.jv-side{padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
+.jv-side h3{margin-bottom:10px}
+.jv-side ul{margin:0;padding-left:18px;color:var(--muted);font-size:.93rem}
+.jv-side li{margin-bottom:6px}
+.jv-center{display:grid;place-items:center;text-align:center;padding:24px 28px;border-radius:12px;background:var(--accent);color:var(--accent-fg);min-width:0}
+.jv-center b{font-family:var(--font-display);font-size:2rem;font-weight:900;display:block;line-height:1.1}
+.jv-center span{font-size:.86rem;opacity:.9;display:block;max-width:22ch}
+.rights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:28px}
+@media (max-width:820px){.rights{grid-template-columns:1fr}}
+.right{padding:22px;border-top:3px solid var(--accent);background:var(--surface-2);border-radius:0 0 12px 12px;min-width:0}
+.right .k{font-family:var(--font-mono);font-size:.74rem;color:var(--accent);letter-spacing:.08em;display:block;margin-bottom:6px}
+.right h3{font-size:1rem;margin-bottom:6px}
+.right p{color:var(--muted);font-size:.9rem}
+.terms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 28px;counter-reset:term}
+@media (max-width:720px){.terms{grid-template-columns:1fr}}
+.term{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);min-width:0}
+.term::before{counter-increment:term;content:counter(term,decimal-leading-zero);font-family:var(--font-mono);color:var(--accent);font-size:.8rem;padding-top:3px}
+.term b{display:block;font-size:.95rem}
+.term span{color:var(--muted);font-size:.88rem}
+.value-box{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:28px}
+@media (max-width:720px){.value-box{grid-template-columns:1fr}}
+.value{padding:20px 22px;border:1px solid var(--line);border-radius:12px;min-width:0}
+.value .k{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.value b{display:block;font-family:var(--font-display);font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;margin-top:4px}
+.value span{color:var(--muted);font-size:.86rem}
+
+/* contact */
+.contact{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:40px}
+@media (max-width:820px){.contact{grid-template-columns:1fr}}
+.contact-info{display:grid;gap:18px;align-content:start}
+.contact-info .row{display:grid;gap:2px}
+.contact-info .k{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.contact-info .v{font-size:1rem;user-select:all}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.form-grid{grid-template-columns:1fr}}
+.form-grid .full{grid-column:1/-1}
+.form-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
+.form-msg{font-size:.9rem;color:var(--ok);font-weight:500}
+
+/* footer */
+.site-footer{border-top:1px solid var(--line);padding-block:28px;color:var(--muted);font-size:.84rem}
+.site-footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="삼현지피알 홈">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M4.5 10.5c1.5-1.2 3-1.2 4.5 0s3 1.2 4.5 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </span>
+      <span>삼현지피알<small>UNDERGROUND WATER BANK</small></span>
+    </a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="#why">왜 지금</a>
+      <a href="#tech">기술</a>
+      <a href="#calc">용량 계산</a>
+      <a href="#pipeline">프로젝트</a>
+      <a href="#esg">ESG</a>
+      <a href="#roadmap">로드맵</a>
+      <a href="#partner">파트너십</a>
+      <a class="nav-cta" href="#contact">문의</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Smart Water Bank · 지하 수자원 뱅크</p>
+        <h1>공장을 현장으로. <span class="accent">도시 지하에 물을 저장합니다.</span></h1>
+        <p class="lede">삼현지피알의 지하 물 저장 시스템은 직경 4~9 m 대구경 나선형 강관을 현장에서 바로 만들어 묻습니다. 운송이 불가능하던 크기의 저류관을 모바일 팩토리로 즉시 생산하고, 그 위는 공원과 주차장으로 돌려줍니다.</p>
+        <p class="hero-sub">특허 제2007-128303호 · 제2008-105375호</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#contact">프로젝트 문의</a>
+          <a class="btn btn-ghost" href="#tech">기술 자세히 보기</a>
+        </div>
+      </div>
+      <figure style="margin:0;min-width:0">
+        <svg class="diagram" viewBox="0 0 800 420" role="img" aria-labelledby="diagTitle diagDesc">
+          <title id="diagTitle">지하 물 저장 시스템 단면도</title>
+          <desc id="diagDesc">공원과 주차장 아래에 직경 5미터 나선형 강관 다섯 개가 나란히 묻혀 물을 저장하고 있다. 왼쪽에서 물이 유입되고 오른쪽으로 공업용수가 공급되며, 지상 한쪽에는 강관을 현장 생산하는 에어돔 모바일 팩토리가 있다.</desc>
+          <defs>
+            <clipPath id="pipesClip">
+              <circle cx="100" cy="265" r="56"/><circle cx="230" cy="265" r="56"/><circle cx="360" cy="265" r="56"/><circle cx="490" cy="265" r="56"/><circle cx="620" cy="265" r="56"/>
+            </clipPath>
+          </defs>
+          <!-- ground -->
+          <rect x="0" y="150" width="800" height="270" fill="var(--soil)"/>
+          <rect x="0" y="340" width="800" height="80" fill="var(--soil-2)"/>
+          <rect x="0" y="144" width="800" height="7" fill="var(--grass)"/>
+          <!-- surface: park and parking -->
+          <g stroke="var(--steel-dark)" stroke-width="2" fill="none">
+            <line x1="60" y1="144" x2="60" y2="120"/><line x1="130" y1="144" x2="130" y2="120"/>
+          </g>
+          <circle cx="60" cy="112" r="14" fill="var(--grass)"/><circle cx="130" cy="110" r="16" fill="var(--grass)"/>
+          <path d="M190 144 V96 M184 96 H196" stroke="var(--steel-dark)" stroke-width="2" fill="none"/>
+          <circle cx="184" cy="94" r="2.5" fill="var(--accent)"/><circle cx="196" cy="94" r="2.5" fill="var(--accent)"/>
+          <path d="M250 144 V118 H300 V144" stroke="var(--fg)" stroke-width="2" fill="none"/>
+          <text x="275" y="112" text-anchor="middle" class="lbl-muted">운동장</text>
+          <g fill="var(--steel)" stroke="var(--steel-dark)" stroke-width="1">
+            <rect x="420" y="128" width="44" height="16" rx="4"/><rect x="474" y="128" width="44" height="16" rx="4"/><rect x="528" y="128" width="44" height="16" rx="4"/>
+          </g>
+          <g fill="var(--steel-dark)"><circle cx="430" cy="145" r="3"/><circle cx="454" cy="145" r="3"/><circle cx="484" cy="145" r="3"/><circle cx="508" cy="145" r="3"/><circle cx="538" cy="145" r="3"/><circle cx="562" cy="145" r="3"/></g>
+          <text x="496" y="118" text-anchor="middle" class="lbl-muted">주차장</text>
+          <!-- mobile factory air dome -->
+          <path d="M660 144 A62 48 0 0 1 784 144 Z" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.5"/>
+          <path d="M680 144 A42 32 0 0 1 764 144" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="722" y="92" text-anchor="middle" class="dim-t">모바일 팩토리 (에어돔)</text>
+          <text x="722" y="134" text-anchor="middle" class="lbl-muted">현장 생산</text>
+          <!-- inflow / outflow -->
+          <path d="M0 300 H44" stroke="var(--water-deep)" stroke-width="8"/>
+          <path d="M30 292 L46 300 L30 308" fill="var(--water-deep)"/>
+          <path d="M676 300 H800" stroke="var(--water-deep)" stroke-width="8"/>
+          <path d="M784 292 L800 300 L784 308" fill="var(--water-deep)"/>
+          <!-- connectors -->
+          <g fill="var(--steel-dark)">
+            <rect x="152" y="252" width="26" height="26"/><rect x="282" y="252" width="26" height="26"/><rect x="412" y="252" width="26" height="26"/><rect x="542" y="252" width="26" height="26"/>
+          </g>
+          <!-- pipes -->
+          <g fill="var(--surface)" stroke="var(--steel)" stroke-width="5">
+            <circle cx="100" cy="265" r="56"/><circle cx="230" cy="265" r="56"/><circle cx="360" cy="265" r="56"/><circle cx="490" cy="265" r="56"/><circle cx="620" cy="265" r="56"/>
+          </g>
+          <g clip-path="url(#pipesClip)">
+            <rect x="0" y="276" width="800" height="60" fill="var(--water)"/>
+            <rect x="0" y="276" width="800" height="4" fill="var(--accent-2)" opacity=".7"/>
+          </g>
+          <g fill="none" stroke="var(--steel-dark)" stroke-width="1" stroke-dasharray="6 5" opacity=".7">
+            <circle cx="100" cy="265" r="48"/><circle cx="230" cy="265" r="48"/><circle cx="360" cy="265" r="48"/><circle cx="490" cy="265" r="48"/><circle cx="620" cy="265" r="48"/>
+          </g>
+          <!-- dimensions -->
+          <path class="dim" d="M24 209 V321 M18 209 H30 M18 321 H30"/>
+          <text x="14" y="265" transform="rotate(-90 14 265)" text-anchor="middle" class="dim-t">Ø 5,000 mm</text>
+          <path class="dim" d="M360 330 V392 M354 392 H366"/>
+          <text x="360" y="408" text-anchor="middle" class="dim-t">1 m당 약 20 t 저장 · 나선형 강관 ×5</text>
+          <path class="leader" d="M44 170 H140"/>
+          <text x="46" y="166" class="lbl-muted">복토층 · 상부는 체육공원·주차장으로 환원</text>
+          <text x="6" y="330" class="lbl-muted">유입</text>
+          <text x="794" y="330" text-anchor="end" class="lbl-muted">공업·생활용수 공급</text>
+        </svg>
+        <figcaption class="diagram-caption">그림 1. Logistics-Zero 모듈형 지하 플랫폼 표준 단면 — 국공유지 지하 활용 예시</figcaption>
+      </figure>
+    </div>
+
+    <div class="wrap">
+      <div class="stats" aria-label="핵심 수치">
+        <div class="stat"><b>4<small>~</small>9<small>m</small></b><span>현장 조립 강관 직경</span></div>
+        <div class="stat"><b>20<small>t / m</small></b><span>직경 5 m 기준 저장량</span></div>
+        <div class="stat"><b>17<small>개월</small></b><span>공사 기간 (RC 100개월 대비)</span></div>
+        <div class="stat"><b>30<small>~</small>35<small>%</small></b><span>총 공사비 절감</span></div>
+        <div class="stat"><b>90<small>%</small></b><span>물류비 절감 (현장 생산)</span></div>
+      </div>
+      <p class="stat-note">* 철근콘크리트(RC) 저류조 대비 자사 비교 기준. 현장 조건에 따라 달라질 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="band" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why Now</p>
+        <h2>기후 위기 시대의 새로운 부의 이동, Water Security</h2>
+        <p class="lede">세계는 가뭄, AI 데이터센터 급증, RE100 산업단지 확대로 막대한 산업용수와 기후 인프라를 요구하고 있습니다. 토목 사업을 넘어 기후 적응 인프라(Climate Adaptation Infrastructure)로 패러다임이 바뀌고 있습니다.</p>
+      </div>
+      <div class="shift">
+        <div><span class="k">From</span><p class="from">Energy Security</p></div>
+        <div class="arrow" aria-hidden="true"><svg width="40" height="24" viewBox="0 0 40 24" fill="none"><path d="M2 12h30M24 4l10 8-10 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><span class="k">To</span><p class="to">Water Security</p></div>
+      </div>
+      <div class="drivers">
+        <div class="driver"><h3>가뭄과 취수 리스크</h3><p>하천 취수에 의존하는 산업단지는 갈수기마다 조업 중단 위험을 안습니다. 단지 하부에 원수를 비축하면 최소 3일분 이상을 자립할 수 있습니다.</p></div>
+        <div class="driver"><h3>AI 데이터센터와 반도체</h3><p>냉각수와 초순수 원수 수요가 급증합니다. 새만금, 용인 같은 메가 클러스터는 매립·조성 단계에서 지하 저류를 선매설하는 것이 가장 경제적입니다.</p></div>
+        <div class="driver"><h3>댐을 대신하는 지하 수자원 뱅크</h3><p>수몰 반대(NIMBY)로 수십 년 표류한 댐 사업을 민원 없는 지하 저류로 대체합니다. 토지 보상비가 들지 않는 국공유지 지하를 씁니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-alt" id="tech">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Technology</p>
+        <h2>공장을 현장으로: Logistics-Zero 모듈형 지하 플랫폼</h2>
+        <p class="lede">직경 5 m가 넘는 강관은 도로법상 적재 제한으로 운송할 수 없습니다. 삼현지피알은 이동 가능한 모듈형 설비를 현장 에어돔 안에 설치해 그 자리에서 생산하고 바로 매설합니다.</p>
+      </div>
+      <div class="tech">
+        <div class="ps">
+          <div class="ps-item">
+            <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3 2 17h16L10 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 9v4M10 15v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div><h3>The Problem</h3><p>직경 5 m 강관은 도로 운송이 불가능합니다. 대구경 저류관을 쓰려면 지금까지는 현장 타설 콘크리트밖에 없었습니다.</p></div>
+          </div>
+          <div class="ps-item">
+            <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="8" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M6 8V5h3v3M12 8V3h3v5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+            <div><h3>The Solution</h3><p>공장을 현장으로 가져갑니다. 모바일 팩토리가 코일 강판을 나선형으로 감아 원하는 직경과 길이의 강관을 즉석에서 만듭니다.</p><span class="spec">Mobile Factory · 현장 에어돔 생산</span></div>
+          </div>
+          <div class="ps-item">
+            <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 2h8l3 3v13H5V2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9h5M8 12h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div><h3>Patent</h3><p>대구경 나선형 강관 모바일 팩토리 관련 특허 2건을 보유하고 있으며, 핵심 원천 기술의 소유권은 삼현지피알이 유지합니다.</p><span class="spec">특허 제2007-128303호 · 제2008-105375호</span></div>
+          </div>
+          <div class="ps-item">
+            <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h14M10 3v14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+            <div><h3>Specs</h3><p>표준 직경 5,000 mm 기준 1 m당 약 20 t의 물을 저장합니다. 길이에 비례해 용량이 늘어나므로 부지 형상에 맞춰 자유롭게 배치합니다.</p><span class="spec">Ø 4 ~ 9 m · 약 20 ㎥/m @ Ø 5 m</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="table-wrap">
+            <table>
+              <caption style="text-align:left;padding:14px 16px;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.1em;color:var(--muted)">PARADIGM SHIFT MATRIX</caption>
+              <thead><tr><th>비교 항목</th><th>RC (철근콘크리트)</th><th class="hi">GPR 현장 조립 강관</th></tr></thead>
+              <tbody>
+                <tr><td>공사 기간</td><td class="rc">100개월 소요</td><td class="hi">17개월<small>60 % 이상 단축</small></td></tr>
+                <tr><td>총 공사비</td><td class="rc">기준 비용</td><td class="hi">30~35 % 절감<small>인건비 비중 5 % 미만</small></td></tr>
+                <tr><td>물류 및 운송</td><td class="rc">운송 불가 (Ø 6 m 이상)</td><td class="hi">물류비 90 % 절감<small>현장 에어돔 생산</small></td></tr>
+                <tr><td>부지 확보</td><td class="rc">대규모 토지 보상비</td><td class="hi">토지 보상비 Zero<small>국공유지 지하 활용</small></td></tr>
+                <tr><td>저류 용량</td><td class="rc">제한적</td><td class="hi">1 m당 약 20 t<small>길이에 비례한 대용량</small></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">공사 기간과 비용은 동일 용량의 RC 저류조 대비 자사 비교값입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="calc">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Capacity Calculator</p>
+        <h2>부지 길이로 가늠하는 저장 용량</h2>
+        <p class="lede">강관 직경과 매설 길이를 넣으면 저장 용량을 바로 계산합니다. 여러 열로 나란히 묻을 때는 열 수를 곱합니다.</p>
+      </div>
+      <div class="calc">
+        <form class="calc-form" id="calcForm">
+          <div class="field">
+            <label for="dia">강관 직경</label>
+            <select id="dia" name="dia">
+              <option value="4">Ø 4,000 mm</option>
+              <option value="5" selected>Ø 5,000 mm (표준)</option>
+              <option value="6">Ø 6,000 mm</option>
+              <option value="7">Ø 7,000 mm</option>
+              <option value="9">Ø 9,000 mm</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="len">매설 길이</label>
+            <input type="number" id="len" name="len" value="1000" min="1" step="10" inputmode="decimal">
+            <span class="hint">m · 1열 기준</span>
+          </div>
+          <div class="field">
+            <label for="rows">열 수</label>
+            <input type="number" id="rows" name="rows" value="1" min="1" max="50" step="1" inputmode="numeric">
+            <span class="hint">나란히 매설하는 강관 열의 수</span>
+          </div>
+          <div class="field">
+            <label for="fill">유효 저수율</label>
+            <input type="number" id="fill" name="fill" value="0.9" min="0.1" max="1" step="0.05" inputmode="decimal">
+            <span class="hint">만수 1.0 · 운영 수위 반영 시 0.8 ~ 0.9</span>
+          </div>
+        </form>
+        <div>
+          <div class="result" aria-live="polite">
+            <p class="cap">총 저장 용량</p>
+            <p class="big"><span id="outTotal">17,671</span><small>㎥</small></p>
+            <dl>
+              <dt>1 m당 저장량 (만수)</dt><dd><span id="outPerM">19.6</span> ㎥</dd>
+              <dt>총 길이</dt><dd><span id="outLen">1,000</span> m</dd>
+              <dt>올림픽 수영장 환산 (2,500 ㎥)</dt><dd><span id="outPool">7.1</span> 개</dd>
+              <dt>1인 1일 생활용수 300 L 기준</dt><dd><span id="outPeople">58,904</span> 명·일</dd>
+            </dl>
+          </div>
+          <p class="formula">저장 용량 = π × (직경 ÷ 2)² × 길이 × 열 수 × 유효 저수율<br>Ø 5 m 기준 단면적 19.6 ㎡, 물 1 ㎥ ≈ 1 t</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-alt" id="pipeline">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Pipeline</p>
+        <h2>국가 메가 프로젝트와 함께 가는 적용 계획</h2>
+      </div>
+      <div class="pipe-total"><b>20~30조 원</b><span>국내 지하 물 저장 인프라 메가 파이프라인 (자사 추정)</span></div>
+      <div class="projects">
+        <article class="project">
+          <span class="year">2027 · 전북 새만금</span>
+          <h3>새만금 AI 데이터센터 및 수전해 거점</h3>
+          <p class="amt">약 4,500<small>억 원</small></p>
+          <p>매립과 동시에 하부에 대구경 강관을 선매설(Parallel Process)해 공업용수 자립망을 구축합니다. 대규모 자동차 산업 투자와 연계합니다.</p>
+        </article>
+        <article class="project">
+          <span class="year">2027 · 경기 용인</span>
+          <h3>용인 반도체 클러스터</h3>
+          <p class="amt">약 3,000<small>억 원</small></p>
+          <p>남한강 취수 의존 리스크를 해소합니다. 단지 하부 20 km 저류 시설로 최소 3일분 초순수 원수 비축 기지를 만듭니다.</p>
+        </article>
+        <article class="project">
+          <span class="year">전국</span>
+          <h3>전국 10대 댐 대체 프로젝트</h3>
+          <p class="amt">약 1.4<small>조 원</small></p>
+          <p>수몰 반대로 수십 년 표류 중인 댐 사업을 민원 없는 지하 수자원 뱅크로 100 % 대체합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="esg">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">ESG Framework</p>
+        <h2>글로벌 임팩트 투자 자본을 유인하는 네 가지 효과</h2>
+      </div>
+      <div class="esg-group">
+        <p class="esg-label">ENVIRONMENTAL · SDG 13 기후행동 / SDG 6 깨끗한 물</p>
+        <div class="esg">
+          <div class="esg-card"><div class="badge" aria-hidden="true">↓</div><div><h3>탄소 감축</h3><p>철근콘크리트 대비 탄소 배출량이 적은 강재를 쓰고, 장거리 운송을 없애 시공 단계 탄소를 대폭 줄입니다.</p></div></div>
+          <div class="esg-card"><div class="badge" aria-hidden="true">↑</div><div><h3>물 안보</h3><p>도심 지하를 활용해 무한대에 가까운 수자원 저장력을 확보합니다.</p></div></div>
+        </div>
+      </div>
+      <div class="esg-group">
+        <p class="esg-label">SOCIAL · SDG 11 지속가능한 도시 / SDG 9 인프라 혁신</p>
+        <div class="esg">
+          <div class="esg-card"><div class="badge" aria-hidden="true">✓</div><div><h3>사회적 갈등(NIMBY) 제로</h3><p>수몰지구가 생기지 않고 토지 보상 갈등이 원천적으로 사라집니다.</p></div></div>
+          <div class="esg-card"><div class="badge" aria-hidden="true">✓</div><div><h3>악취 및 해충 차단</h3><p>완전 밀폐형 지하화로 개방 저수지의 악취·해충 민원이 없고, 지상 공간은 시민 체육공원으로 돌려줍니다.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-alt" id="roadmap">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Roadmap</p>
+        <h2>글로벌 IB 및 기후 펀드 연계 스케일업 로드맵</h2>
+      </div>
+      <div class="roadmap">
+        <div class="phase"><p class="yr">2026</p><h3>Pilot &amp; Proof</h3><p>국내 모바일 팩토리 실증 시설 구축과 3자 기술 검증 완료.</p><span class="fund">재원: 파트너사 50억 Growth Capital</span></div>
+        <div class="phase"><p class="yr">2027–28</p><h3>Domestic PF</h3><p>새만금, 용인 등 메가 파이프라인 상용 착공.</p><span class="fund">재원: Project Finance (현금흐름 기반)</span></div>
+        <div class="phase"><p class="yr">2028–29</p><h3>Global Climate Finance</h3><p>아프리카·중동 물 부족 국가 대상 기술 및 장비 수출 패키지 가동.</p><span class="fund">재원: Green Climate Fund, World Bank ODA</span></div>
+        <div class="phase"><p class="yr">2030</p><h3>Platform Exit</h3><p>기후 적응형 글로벌 지하 물저장 인프라 플랫폼으로 밸류에이션(10~15x EBITDA).</p><span class="fund">재원: Global Infrastructure Funds / IPO</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="partner">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Strategic Partnership</p>
+        <h2>50:50 합작법인(SPC)으로 함께 시장을 선점합니다</h2>
+        <p class="lede">삼현지피알은 기술과 시장 선점력을, 파트너사는 자본과 EPC 시공 역량을 냅니다. SPC는 차세대 지능형 물관리 인프라(Smart Water Bank)의 글로벌 거점이 됩니다.</p>
+      </div>
+      <div class="jv">
+        <div class="jv-side">
+          <h3>삼현지피알</h3>
+          <ul>
+            <li>핵심 기술 및 지식재산권(IP): 4~9 m 대구경 나선형 강관 모바일 팩토리 특허</li>
+            <li>시장 선점력: 글로벌 기후 펀드 및 공공 조달(B2G) 네트워크</li>
+          </ul>
+        </div>
+        <div class="jv-center"><b>50 : 50</b><span>공동 합작법인 (SPC) · 공동대표이사 체제</span></div>
+        <div class="jv-side">
+          <h3>파트너사 (A사)</h3>
+          <ul>
+            <li>자본(Growth Capital): 50억 원 전략적 지분 투자</li>
+            <li>EPC 시공 역량: 대규모 토목 인프라 시공 및 프로젝트 관리 노하우</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rights">
+        <div class="right"><span class="k">IP OWNERSHIP</span><h3>삼현지피알 보호</h3><p>특허 및 핵심 원천 기술 소유권을 유지해 글로벌 기술 유출을 원천 차단합니다.</p></div>
+        <div class="right"><span class="k">SPC BUSINESS RIGHTS</span><h3>공동의 성장</h3><p>SPC에 독점실시권을 부여하고 국내외 프로젝트 개발, 사업권 확보, O&amp;M 수익을 독점합니다.</p></div>
+        <div class="right"><span class="k">EPC REVENUE</span><h3>파트너사 확실한 보상</h3><p>SPC가 수주하는 모든 프로젝트의 우선시공권 100 %를 부여해 건설 매출과 시공 마진을 확보합니다.</p></div>
+      </div>
+      <h3 style="margin-bottom:12px">합작투자계약(JVA) 10대 주요 조항</h3>
+      <div class="terms">
+        <div class="term"><div><b>이사회 구성</b><span>지분율에 비례해 양사가 동수의 이사를 지명하는 공동대표이사 체제</span></div></div>
+        <div class="term"><div><b>자본 확충</b><span>추가 자금은 양사 합의 유상증자를 원칙으로 하되 외부 PF 조달을 최우선</span></div></div>
+        <div class="term"><div><b>지식재산권 보호</b><span>원천 특허는 삼현지피알이 유지, SPC 존속 기간 기술 사용 무상 보장</span></div></div>
+        <div class="term"><div><b>독점실시권</b><span>SPC는 국내외 관련 사업에 대해 배타적 독점 사업권 보유</span></div></div>
+        <div class="term"><div><b>배당 정책</b><span>O&amp;M 및 라이선스 수익의 최소 50 %를 양사에 매년 현금 배당</span></div></div>
+        <div class="term"><div><b>우선시공권 및 단가</b><span>파트너사 100 % 우선시공권, 시공 단가는 시장 가격 기준 양사 합의</span></div></div>
+        <div class="term"><div><b>O&amp;M 권리</b><span>완공 후 유지보수(스마트 순환 시스템 운영) 사업권은 SPC 전담</span></div></div>
+        <div class="term"><div><b>교착상태 해결</b><span>중대 의사결정 대립 시 외부 전문 중재 기관 또는 합의된 에스컬레이션 절차</span></div></div>
+        <div class="term"><div><b>동반매도참여권</b><span>일방의 지분 매각 시 타방에게 동일 조건 매각권(Tag-along) 부여</span></div></div>
+        <div class="term"><div><b>엑시트 타임라인</b><span>2030년 밸류에이션 1,200억 원 달성 시점에 글로벌 인프라 펀드 매각 또는 IPO</span></div></div>
+      </div>
+      <div class="value-box">
+        <div class="value"><span class="k">Investment Ask</span><b>50억 원</b><span>Growth Capital · 전략적 지분 투자</span></div>
+        <div class="value"><span class="k">Target EV · 2030</span><b>1,200억 원</b><span>파트너사 지분가치(50 %) 600억 원</span></div>
+        <div class="value"><span class="k">Return</span><b>약 12배</b><span>초기 투자금 대비 (자사 추정)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-alt" id="contact">
+    <div class="wrap contact">
+      <div class="contact-info">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>퍼스트 무버로 도약할 골든타임</h2>
+          <p class="lede">지하 공간의 새로운 가치를 발굴하고 국가 수자원 안보를 구축해야 할 결정적 시기입니다. 프로젝트 적용 검토, 기술 협력, 합작법인 제안에 대해 문의하세요.</p>
+        </div>
+        <div class="row"><span class="k">회사</span><span class="v">삼현지피알(주)</span></div>
+        <div class="row"><span class="k">전화</span><span class="v">02-000-0000</span></div>
+        <div class="row"><span class="k">이메일</span><span class="v">contact@example.com</span></div>
+        <div class="row"><span class="k">Next Step</span><span class="v">SPC 설립 MOU 체결 및 본계약(JVA) 세부 협의</span></div>
+      </div>
+      <form class="form-grid" id="contactForm" novalidate>
+        <div class="field"><label for="cName">이름</label><input type="text" id="cName" name="name" required autocomplete="name"></div>
+        <div class="field"><label for="cOrg">기관 / 회사</label><input type="text" id="cOrg" name="org" autocomplete="organization"></div>
+        <div class="field"><label for="cPhone">연락처</label><input type="tel" id="cPhone" name="phone" autocomplete="tel"></div>
+        <div class="field"><label for="cType">문의 유형</label>
+          <select id="cType" name="type">
+            <option>프로젝트 적용 검토</option><option>기술 협력 / 라이선스</option><option>합작법인(SPC) 제안</option><option>투자 문의</option><option>기타</option>
+          </select>
+        </div>
+        <div class="field full"><label for="cMsg">내용</label><textarea id="cMsg" name="msg" rows="4" placeholder="예: 산업단지 하부 20 km 저류 시설 검토, 용수 수요 1일 5만 톤"></textarea></div>
+        <div class="form-actions full">
+          <button class="btn btn-primary" type="submit" id="cSubmit">문의 보내기</button>
+          <span class="form-msg" id="formMsg" hidden>접수되었습니다. 담당자가 연락드리겠습니다.</span>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 삼현지피알(주)</span>
+    <span>A Strategic Leap to the Global Climate Infrastructure Platform</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ids=['dia','len','rows','fill'];
+  var fmt0=function(n){return Math.round(n).toLocaleString('ko-KR')};
+  var fmt1=function(n){return (Math.round(n*10)/10).toLocaleString('ko-KR',{minimumFractionDigits:1,maximumFractionDigits:1})};
+  function calc(){
+    var d=parseFloat(document.getElementById('dia').value)||0;
+    var len=parseFloat(document.getElementById('len').value)||0;
+    var rows=parseFloat(document.getElementById('rows').value)||0;
+    var fill=parseFloat(document.getElementById('fill').value)||0;
+    var perM=Math.PI*Math.pow(d/2,2);
+    var total=perM*len*rows*fill;
+    document.getElementById('outTotal').textContent=fmt0(total);
+    document.getElementById('outPerM').textContent=fmt1(perM);
+    document.getElementById('outLen').textContent=fmt0(len*rows);
+    document.getElementById('outPool').textContent=fmt1(total/2500);
+    document.getElementById('outPeople').textContent=fmt0(total/0.3);
+  }
+  ids.forEach(function(id){document.getElementById(id).addEventListener('input',calc)});
+  calc();
+
+  var form=document.getElementById('contactForm');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('cName');
+    if(!name.value.trim()){name.focus();name.setAttribute('aria-invalid','true');return}
+    name.removeAttribute('aria-invalid');
+    document.getElementById('formMsg').hidden=false;
+    document.getElementById('cSubmit').disabled=true;
+    document.getElementById('cSubmit').textContent='접수 완료';
+  });
+})();
+</script>
+</body>
+</html>
